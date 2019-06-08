@@ -1,0 +1,59 @@
+<html>
+    <head>
+        <title>
+    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+	<script src="js/like-dislike.js"></script>
+        </title>
+    </head>
+    <body>
+<button class="like">Like 
+    <span class="likes">0</span>
+  </button>
+  <button class="dislike">Dislike 
+    <span class="dislikes">0</span>
+  </button>
+  <script>
+      $('#demo').likeDislike();
+      $('#demo').likeDislike({
+
+  click: function (btnType, likes, dislikes, event) {
+      var likesElem = $(this).find('.likes');
+      var dislikedsElem = $(this).find('.dislikes');
+      likesElem.text(parseInt(likesElem.text()) + likes);
+      dislikedsElem.text(parseInt(dislikedsElem.text()) + dislikes);
+  }
+
+  $('#demo').likeDislike({
+  reverseMode: true,
+  activeBtn: localStorage['key']? localStorage['key'] : '',
+  click: function(btnType, likes, dislikes, event) {
+    var self = this;
+
+    self.readOnly(true);
+
+    
+    $.ajax({
+      url: '/action',
+      type: 'GET',
+      data: 'id=1' + '&likes=' + likes + '&dislikes=' + dislikes,
+      success: function (data) {
+       
+        $(self).find('.likes').text(data.likes);
+        $(self).find('.dislikes').text(data.dislikes);
+        localStorage['key'] = btnType;
+
+        self.readOnly(false);
+      }
+    });
+  }
+});
+
+  
+});
+
+  </script>
+    </body>
+</html>
+<div id="demo">
+  
+</div>
